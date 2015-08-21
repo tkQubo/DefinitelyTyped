@@ -9,7 +9,7 @@
 declare module "run-sequence" {
 
     interface IRunSequence {
-        (...streams: (string | string[] | gulp.ITaskCallback)[]): NodeJS.ReadWriteStream;
+        (...streams: (string | string[] | gulp.TaskCallback)[]): NodeJS.ReadWriteStream;
 
         use(gulp: gulp.Gulp): IRunSequence;
     }
