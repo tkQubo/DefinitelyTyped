@@ -10,43 +10,43 @@
 declare module "gulp" {
     import Orchestrator = require("orchestrator");
 
-    interface Gulp extends Orchestrator {
-        /**
-         * Define a task
-         * @param name The name of the task.
-         * @param deps An array of task names to be executed and completed before your task will run.
-         * @param fn The function that performs the task's operations. For asynchronous tasks, you need to provide a hint when the task is complete:
-         * <ul>
-         *     <li>Take in a callback</li>
-         *     <li>Return a stream or a promise</li>
-         * </ul>
-         */
-        task: Orchestrator.AddMethod;
-        /**
-         * Emits files matching provided glob or an array of globs. Returns a stream of Vinyl files that can be piped to plugins.
-         * @param glob Glob or array of globs to read.
-         * @param opt Options to pass to node-glob through glob-stream.
-         */
-        src: gulp.SrcMethod;
-        /**
-         * Can be piped to and it will write files. Re-emits all data passed to it so you can pipe to multiple folders.
-         * Folders that don't exist will be created.
-         *
-         * @param outFolder The path (output folder) to write files to. Or a function that returns it, the function will be provided a vinyl File instance.
-         * @param opt
-         */
-        dest: gulp.DestMethod;
-        /**
-         * Watch files and do something when a file changes. This always returns an EventEmitter that emits change events.
-         *
-         * @param glob a single glob or array of globs that indicate which files to watch for changes.
-         * @param opt options, that are passed to the gaze library.
-         * @param fn a callback or array of callbacks to be called on each change, or names of task(s) to run when a file changes, added with task().
-         */
-        watch: gulp.WatchMethod;
-    }
-
     namespace gulp {
+        interface Gulp extends Orchestrator {
+            /**
+             * Define a task
+             * @param name The name of the task.
+             * @param deps An array of task names to be executed and completed before your task will run.
+             * @param fn The function that performs the task's operations. For asynchronous tasks, you need to provide a hint when the task is complete:
+             * <ul>
+             *     <li>Take in a callback</li>
+             *     <li>Return a stream or a promise</li>
+             * </ul>
+             */
+            task: Orchestrator.AddMethod;
+            /**
+             * Emits files matching provided glob or an array of globs. Returns a stream of Vinyl files that can be piped to plugins.
+             * @param glob Glob or array of globs to read.
+             * @param opt Options to pass to node-glob through glob-stream.
+             */
+            src: gulp.SrcMethod;
+            /**
+             * Can be piped to and it will write files. Re-emits all data passed to it so you can pipe to multiple folders.
+             * Folders that don't exist will be created.
+             *
+             * @param outFolder The path (output folder) to write files to. Or a function that returns it, the function will be provided a vinyl File instance.
+             * @param opt
+             */
+            dest: gulp.DestMethod;
+            /**
+             * Watch files and do something when a file changes. This always returns an EventEmitter that emits change events.
+             *
+             * @param glob a single glob or array of globs that indicate which files to watch for changes.
+             * @param opt options, that are passed to the gaze library.
+             * @param fn a callback or array of callbacks to be called on each change, or names of task(s) to run when a file changes, added with task().
+             */
+            watch: gulp.WatchMethod;
+        }
+
         interface GulpPlugin {
             (...args: any[]): NodeJS.ReadWriteStream;
         }
@@ -289,7 +289,8 @@ declare module "gulp" {
         }
     }
 
-    var gulp: Gulp;
+    var gulp: gulp.Gulp;
+
     export = gulp;
 }
 
