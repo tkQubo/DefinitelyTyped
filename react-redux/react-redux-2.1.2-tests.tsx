@@ -1,14 +1,15 @@
-/// <reference path="react-redux.d.ts" />
+/// <reference path="react-redux-2.1.2.d.ts" />
 /// <reference path="../react/react.d.ts"/>
 /// <reference path="../react/react-dom.d.ts"/>
 /// <reference path="../redux/redux.d.ts" />
-/// <reference path="../react-router/react-router.d.ts" />
+/// <reference path="../react-router/react-router-0.13.3.d.ts" />
 /// <reference path="../object-assign/object-assign.d.ts" />
 
-import { Component, ComponentClass, ReactElement } from 'react';
+import { Component, ReactElement } from 'react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Router, RouterState } from 'react-router';
+import * as Router from 'react-router';
+import { Route, RouterState } from 'react-router';
 import { Store, Dispatch, bindActionCreators } from 'redux';
 import { connect, Provider } from 'react-redux';
 import objectAssign = require('object-assign');
@@ -23,7 +24,7 @@ interface CounterState {
 }
 declare var increment: Function;
 
-class Counter extends Component<any, CounterState> {
+class Counter extends Component<any, any> {
     render() {
         return (
             <button onClick={this.props.onIncrement}>
@@ -76,12 +77,13 @@ ReactDOM.render((
 // API
 // https://github.com/rackt/react-redux/blob/master/docs/api.md
 //
+declare var routes: Route;
 declare var store: Store;
 declare var routerState: RouterState;
 class MyRootComponent extends Component<any, any> {
 
 }
-class TodoApp extends Component<any, TodoState> {
+class TodoApp extends Component<any, any> {
 
 }
 interface TodoState {
@@ -96,7 +98,6 @@ interface DispatchProps {
 declare var actionCreators: () => {
     action: Function;
 }
-declare var history: HistoryModule.History;
 declare var addTodo: () => { type: string; };
 declare var todoActionCreators: { [type: string]: (...args: any[]) => any; };
 declare var counterActionCreators: { [type: string]: (...args: any[]) => any; };
@@ -108,12 +109,26 @@ ReactDOM.render(
   document.body
 );
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Router history={history}></Router>
-  </Provider>,
-  targetEl
-);
+Router.run(routes, Router.HistoryLocation, (Handler, routerState) => { // note "routerState" here
+    ReactDOM.render(
+        <Provider store={store}>
+            {/*
+             //TODO: error TS2339: Property 'routerState' does not exist on type 'RouteProp'.
+             {() => <Handler routerState={routerState} />} // note "routerState" here: important to pass it down
+            */}
+        </Provider>,
+        document.getElementById('root')
+    );
+});
+
+//TODO: for React Router 1.0
+//TODO: error TS2604: JSX element type 'Router' does not have any construct or call signatures.
+//ReactDOM.render(
+//    <Provider store={store}>
+//        {() => <Router history={history}>...</Router>}
+//    </Provider>,
+//    targetEl
+//);
 
 // Inject just dispatch and don't listen to store
 
@@ -240,7 +255,7 @@ interface TestState {
     state1: number;
 }
 class TestComponent extends Component<TestProp, TestState> { }
-const WrappedTestComponent: ComponentClass<TestProp> = connect<TestProp, TestState>()(TestComponent);
+const WrappedTestComponent = connect()(TestComponent);
 
 // return value of the connect()(TestComponent) is of the type TestComponent
 let ATestComponent: typeof TestComponent = null;
@@ -257,13 +272,9 @@ class NonComponent {}
 //connect()(NonComponent);
 
 // connect()(SomeClass) has the same constructor as SomeClass itself
-class SomeClass extends Component<string, any> {
+class SomeClass extends Component<any, any> {
     constructor(public foo: string) { super() }
     public bar: number;
 }
-let bar: number = new (connect<string, any>()(SomeClass))("foo").bar;
+let bar: number = new (connect()(SomeClass))("foo").bar;
 
-declare function statelessComponent(prop: TestProp): ReactElement<TestProp>;
-
-connect<TestProp, TestState>()(TestComponent);
-connect<TestProp, any>()(statelessComponent);

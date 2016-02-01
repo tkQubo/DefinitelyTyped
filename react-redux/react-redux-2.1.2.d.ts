@@ -1,4 +1,4 @@
-// Type definitions for react-redux 4.1.2
+// Type definitions for react-redux 2.1.2
 // Project: https://github.com/rackt/react-redux
 // Definitions by: Qubo <https://github.com/tkqubo>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -7,34 +7,28 @@
 /// <reference path="../redux/redux.d.ts" />
 
 declare module "react-redux" {
-  import { Component, ComponentClass, StatelessComponent } from 'react';
+  import { Component } from 'react';
   import { Store, Dispatch, ActionCreator } from 'redux';
 
-  export type ComponentWrapper<P> =
-    <TComponent extends ComponentClass<P>|StatelessComponent<P>>(component: TComponent) => TComponent
-
-  export var connect: Connect;
-
-  export interface Connect {
-    /**
-     * Connects a React component to a Redux store.
-     */
-    <P>(): ComponentWrapper<P>;
-    /**
-     * Connects a React component to a Redux store.
-     * @param mapStateToProps
-     * @param mapDispatchToProps
-     * @param mergeProps
-     * @param options
-     */
-    <P, S>(mapStateToProps?: MapStateToProps<S>,
-           mapDispatchToProps?: MapDispatchToPropsFunction|MapDispatchToPropsObject,
-           mergeProps?: MergeProps,
-           options?: Options): ComponentWrapper<P>;
+  export class ElementClass extends Component<any, any> { }
+  export interface ClassDecorator {
+    <T extends (typeof ElementClass)>(component: T): T
   }
 
-  interface MapStateToProps<S> {
-    (state: S, ownProps?: any): any;
+  /**
+   * Connects a React component to a Redux store.
+   * @param mapStateToProps
+   * @param mapDispatchToProps
+   * @param mergeProps
+   * @param options
+     */
+  export function connect(mapStateToProps?: MapStateToProps,
+                          mapDispatchToProps?: MapDispatchToPropsFunction|MapDispatchToPropsObject,
+                          mergeProps?: MergeProps,
+                          options?: Options): ClassDecorator;
+
+  interface MapStateToProps {
+    (state: any, ownProps?: any): any;
   }
 
   interface MapDispatchToPropsFunction {
